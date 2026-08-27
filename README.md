@@ -1,2 +1,3 @@
-# Quorum
-AI-powered transaction risk scoring with explainable decisions and anomaly detection.
+# Quorum - Risk Manager
+
+A smart risk management system for identifying, assessing, and managing potential risks.

@@ -10,7 +10,8 @@ from sklearn.metrics import precision_score, recall_score, f1_score, roc_auc_sco
 # ---------- Load everything ----------
 test_df = pd.read_csv("data/test_features.csv")
 TARGET = "is_fraud"
-feature_cols = [c for c in test_df.columns if c != TARGET]
+ID_COLS = ["transaction_id"]
+feature_cols = [c for c in test_df.columns if c != TARGET and c not in ID_COLS]
 X_test = test_df[feature_cols]
 y_test = test_df[TARGET].values
 

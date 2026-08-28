@@ -1,0 +1,21 @@
+{
+  "cost_assumptions": {
+    "false_negative": 100,
+    "false_positive": 5,
+    "true_positive": 2,
+    "true_negative": 0
+  },
+  "cost_tuned_threshold": {
+    "threshold": 0.26,
+    "precision": 0.625,
+    "recall": 0.5085,
+    "total_cost": 6100.0
+  },
+  "naive_threshold_0.5": {
+    "threshold": 0.5,
+    "precision": 0.7639,
+    "recall": 0.4661,
+    "total_cost": 6495.0
+  },
+  "cost_reduction_pct": 6.08
+}

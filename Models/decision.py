@@ -18,7 +18,8 @@ import pandas as pd
 # ---------- 1. Load validation data + rebuild ensemble probabilities ----------
 val_df = pd.read_csv("data/val_features.csv")
 TARGET = "is_fraud"
-feature_cols = [c for c in val_df.columns if c != TARGET]
+ID_COLS = ["transaction_id"]
+feature_cols = [c for c in val_df.columns if c != TARGET and c not in ID_COLS]
 
 X_val = val_df[feature_cols]
 y_val = val_df[TARGET].values

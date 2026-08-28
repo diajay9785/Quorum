@@ -21,7 +21,8 @@ from features import engineer_features  # reused from Day 1, Hour 5
 train_df = pd.read_csv("data/train_features.csv")
 val_df = pd.read_csv("data/val_features.csv")
 TARGET = "is_fraud"
-feature_cols = [c for c in train_df.columns if c != TARGET]
+ID_COLS = ["transaction_id"]
+feature_cols = [c for c in train_df.columns if c != TARGET and c not in ID_COLS]
 
 X_train_normal = train_df[train_df[TARGET] == 0][feature_cols]
 X_val = val_df[feature_cols]

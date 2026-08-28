@@ -1,0 +1,30 @@
+{
+  "random_forest": {
+    "precision": 0.5816,
+    "recall": 0.4831,
+    "f1": 0.5278,
+    "roc_auc": 0.7799
+  },
+  "extra_trees": {
+    "precision": 0.7681,
+    "recall": 0.4492,
+    "f1": 0.5668,
+    "roc_auc": 0.7752
+  },
+  "xgboost": {
+    "precision": 0.5377,
+    "recall": 0.4831,
+    "f1": 0.5089,
+    "roc_auc": 0.7609
+  },
+  "lightgbm": {
+    "precision": 0.5263,
+    "recall": 0.5085,
+    "f1": 0.5172,
+    "roc_auc": 0.7638
+  },
+  "_summary": {
+    "strongest_by_f1": "extra_trees",
+    "weakest_by_f1": "xgboost"
+  }
+}

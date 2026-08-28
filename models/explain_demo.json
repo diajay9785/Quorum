@@ -1,0 +1,132 @@
+[
+  {
+    "top_features": [
+      {
+        "feature": "cat_dining",
+        "contribution": -0.4882,
+        "phrase_key": "cat_dining",
+        "direction": "lower",
+        "phrase_en": "this is an unusual merchant category (dining) for this user"
+      },
+      {
+        "feature": "user_txn_count_30d",
+        "contribution": -0.0968,
+        "phrase_key": "user_txn_count_30d",
+        "direction": "lower",
+        "phrase_en": "the user has lower activity in the last 30 days"
+      },
+      {
+        "feature": "hour_of_day",
+        "contribution": -0.0398,
+        "phrase_key": "hour_of_day",
+        "direction": "lower",
+        "phrase_en": "the transaction occurred at an unusual hour"
+      }
+    ],
+    "explanation_text_en": "Flagged mainly because this is an unusual merchant category (dining) for this user; the user has lower activity in the last 30 days; the transaction occurred at an unusual hour."
+  },
+  {
+    "top_features": [
+      {
+        "feature": "cat_pharmacy",
+        "contribution": -0.4609,
+        "phrase_key": "cat_pharmacy",
+        "direction": "lower",
+        "phrase_en": "this is an unusual merchant category (pharmacy) for this user"
+      },
+      {
+        "feature": "hour_of_day",
+        "contribution": -0.0918,
+        "phrase_key": "hour_of_day",
+        "direction": "lower",
+        "phrase_en": "the transaction occurred at an unusual hour"
+      },
+      {
+        "feature": "user_txn_count_30d",
+        "contribution": -0.0745,
+        "phrase_key": "user_txn_count_30d",
+        "direction": "lower",
+        "phrase_en": "the user has lower activity in the last 30 days"
+      }
+    ],
+    "explanation_text_en": "Flagged mainly because this is an unusual merchant category (pharmacy) for this user; the transaction occurred at an unusual hour; the user has lower activity in the last 30 days."
+  },
+  {
+    "top_features": [
+      {
+        "feature": "cat_dining",
+        "contribution": -0.5173,
+        "phrase_key": "cat_dining",
+        "direction": "lower",
+        "phrase_en": "this is an unusual merchant category (dining) for this user"
+      },
+      {
+        "feature": "user_txn_count_30d",
+        "contribution": -0.1377,
+        "phrase_key": "user_txn_count_30d",
+        "direction": "lower",
+        "phrase_en": "the user has lower activity in the last 30 days"
+      },
+      {
+        "feature": "amount",
+        "contribution": -0.0403,
+        "phrase_key": "amount",
+        "direction": "lower",
+        "phrase_en": "the transaction amount was lower"
+      }
+    ],
+    "explanation_text_en": "Flagged mainly because this is an unusual merchant category (dining) for this user; the user has lower activity in the last 30 days; the transaction amount was lower."
+  },
+  {
+    "top_features": [
+      {
+        "feature": "cat_fuel",
+        "contribution": -0.5063,
+        "phrase_key": "cat_fuel",
+        "direction": "lower",
+        "phrase_en": "this is an unusual merchant category (fuel) for this user"
+      },
+      {
+        "feature": "hour_of_day",
+        "contribution": -0.1069,
+        "phrase_key": "hour_of_day",
+        "direction": "lower",
+        "phrase_en": "the transaction occurred at an unusual hour"
+      },
+      {
+        "feature": "user_txn_count_30d",
+        "contribution": -0.0252,
+        "phrase_key": "user_txn_count_30d",
+        "direction": "lower",
+        "phrase_en": "the user has lower activity in the last 30 days"
+      }
+    ],
+    "explanation_text_en": "Flagged mainly because this is an unusual merchant category (fuel) for this user; the transaction occurred at an unusual hour; the user has lower activity in the last 30 days."
+  },
+  {
+    "top_features": [
+      {
+        "feature": "cat_entertainment",
+        "contribution": -0.5283,
+        "phrase_key": "cat_entertainment",
+        "direction": "lower",
+        "phrase_en": "this is an unusual merchant category (entertainment) for this user"
+      },
+      {
+        "feature": "user_txn_count_30d",
+        "contribution": -0.1073,
+        "phrase_key": "user_txn_count_30d",
+        "direction": "lower",
+        "phrase_en": "the user has lower activity in the last 30 days"
+      },
+      {
+        "feature": "hour_of_day",
+        "contribution": -0.048,
+        "phrase_key": "hour_of_day",
+        "direction": "lower",
+        "phrase_en": "the transaction occurred at an unusual hour"
+      }
+    ],
+    "explanation_text_en": "Flagged mainly because this is an unusual merchant category (entertainment) for this user; the user has lower activity in the last 30 days; the transaction occurred at an unusual hour."
+  }
+]

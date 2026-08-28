@@ -1,0 +1,17 @@
+{
+  "approve_threshold": 0.02,
+  "block_threshold": 0.59,
+  "approve_band_miss_rate": 0.0182,
+  "block_band_precision": 0.8571,
+  "autonomy_pct_on_validation": 84.47,
+  "band_counts": {
+    "approve": 2472,
+    "escalate": 466,
+    "block": 63
+  },
+  "fraud_by_band": {
+    "approve": 45,
+    "escalate": 19,
+    "block": 54
+  }
+}

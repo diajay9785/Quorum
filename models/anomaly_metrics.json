@@ -1,0 +1,7 @@
+{
+  "validation_fraud_flagged_rate": 0.3898,
+  "validation_false_alarm_rate": 0.0267,
+  "holdout_unseen_pattern_catch_rate_pct": 100.0,
+  "holdout_rows_tested": 150,
+  "holdout_rows_flagged": 150
+}

@@ -1,0 +1,35 @@
+{
+  "ensemble": {
+    "precision": 0.7297297297297297,
+    "recall": 0.4576271186440678,
+    "f1": 0.5625,
+    "roc_auc": 0.7734439760842342
+  },
+  "best_single_model_extra_trees": {
+    "precision": 0.7761194029850746,
+    "recall": 0.4406779661016949,
+    "f1": 0.5621621621621622,
+    "roc_auc": 0.7776136557376085
+  },
+  "feature_columns": [
+    "amount",
+    "device_change_flag",
+    "ip_change_flag",
+    "hour_of_day",
+    "user_txn_count_30d",
+    "time_since_last_txn_min",
+    "amount_zscore",
+    "high_velocity_flag",
+    "rapid_txn_flag",
+    "cat_grocery",
+    "cat_electronics",
+    "cat_travel",
+    "cat_fuel",
+    "cat_dining",
+    "cat_utilities",
+    "cat_online_retail",
+    "cat_jewelry",
+    "cat_pharmacy",
+    "cat_entertainment"
+  ]
+}

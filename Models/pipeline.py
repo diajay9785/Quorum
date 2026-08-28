@@ -4,6 +4,7 @@ import json
 import joblib
 import numpy as np
 import pandas as pd
+import shap
 
 sys.path.append(os.path.join(os.getcwd(), "features"))
 from features import engineer_features
@@ -23,11 +24,19 @@ DOMINANT_MODEL_NAME = explain_config["dominant_model_name"]
 PHRASE_TEMPLATES = explain_config["phrase_templates"]
 DEFAULT_TEMPLATE = "{feature} was a contributing factor"
 
+
+def get_template(feature_name):
+    if feature_name.startswith("cat_"):
+        category = feature_name.replace("cat_", "").replace("_", " ")
+        return f"this is an unusual merchant category ({category}) for this user"
+    return PHRASE_TEMPLATES.get(feature_name, DEFAULT_TEMPLATE)
+
+
 # feature column order -- pulled from training data once, at import time
 _train_df = pd.read_csv("data/train_features.csv")
-FEATURE_COLS = [c for c in _train_df.columns if c != "is_fraud"]
+ID_COLS = ["transaction_id"]
+FEATURE_COLS = [c for c in _train_df.columns if c != "is_fraud" and c not in ID_COLS]
 
-import shap
 _dominant_clf = base_models[DOMINANT_MODEL_NAME].named_steps["clf"]
 _explainer = shap.TreeExplainer(_dominant_clf)
 
@@ -72,13 +81,14 @@ def predict(transaction: dict) -> dict:
         shap_row = shap_values[0, :, 1]         # newer SHAP: (rows, features, classes)
     else:
         shap_row = shap_values[0]               # already 2D
+
     top_indices = np.argsort(np.abs(shap_row))[::-1][:3]
     top_features = []
     for i in top_indices:
         feature_name = FEATURE_COLS[i]
         contribution = float(shap_row[i])
         direction = "higher" if contribution > 0 else "lower"
-        template = PHRASE_TEMPLATES.get(feature_name, DEFAULT_TEMPLATE)
+        template = get_template(feature_name)
         top_features.append({
             "feature": feature_name,
             "contribution": round(contribution, 4),
@@ -119,9 +129,6 @@ def record_feedback(transaction_id: str, transaction: dict, confirmed_label: int
 
 # ---------- Smoke test ----------
 if __name__ == "__main__":
-    sample_row = pd.read_csv("data/val_features.csv").iloc[0]
-    # NOTE: this smoke test uses an already-engineered row's raw equivalent
-    # would need to come from transactions.csv for a true raw-input test.
     raw_sample = pd.read_csv("data/transactions.csv").iloc[0].to_dict()
 
     result = predict(raw_sample)

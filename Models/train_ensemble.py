@@ -16,7 +16,8 @@ train_df = pd.read_csv("data/train_features.csv")
 val_df = pd.read_csv("data/val_features.csv")
 
 TARGET = "is_fraud"
-feature_cols = [c for c in train_df.columns if c != TARGET]
+ID_COLS = ["transaction_id"]
+feature_cols = [c for c in train_df.columns if c != TARGET and c not in ID_COLS]
 
 X_train = train_df[feature_cols]
 y_train = train_df[TARGET]

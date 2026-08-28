@@ -1,0 +1,2 @@
+transaction_id,amount,merchant_category,device_change_flag,ip_change_flag,hour_of_day,user_txn_count_30d,time_since_last_txn_min,is_fraud,confirmed_label
+demo_txn_001,107.55,dining,0,0,21,11,346.8,0,0

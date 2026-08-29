@@ -1,0 +1,11 @@
+{
+  "app_title": "Quorum",
+  "login": "Log In",
+  "signup": "Sign Up",
+  "email": "Email",
+  "password": "Password",
+  "dashboard": "Dashboard",
+  "simulator": "Live Simulator",
+  "audit_trail": "Audit Trail",
+  "logout": "Log Out"
+}

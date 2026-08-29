@@ -10,6 +10,15 @@ from models.pipeline import predict, record_feedback
 from api.supabase_client import supabase
 
 app = FastAPI(title="Quorum Risk Manager API")
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # tighten this to your actual Vercel URL once Day 4 frontend is deployed
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 MODELS_DIR = Path(__file__).resolve().parent.parent / "models"
 

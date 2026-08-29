@@ -118,12 +118,12 @@ def record_feedback(transaction_id: str, transaction: dict, confirmed_label: int
     """
     row = {**transaction, "transaction_id": transaction_id, "confirmed_label": confirmed_label}
     row_df = pd.DataFrame([row])
-
     if os.path.exists(RETRAIN_QUEUE_PATH):
+        existing_cols = pd.read_csv(RETRAIN_QUEUE_PATH, nrows=0).columns.tolist()
+        row_df = row_df.reindex(columns=existing_cols)
         row_df.to_csv(RETRAIN_QUEUE_PATH, mode="a", header=False, index=False)
     else:
         row_df.to_csv(RETRAIN_QUEUE_PATH, mode="w", header=True, index=False)
-
     print(f"Feedback recorded for transaction {transaction_id} -> appended to {RETRAIN_QUEUE_PATH}")
 
 

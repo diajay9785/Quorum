@@ -1,6 +1,6 @@
 import sys, os, json
 from pathlib import Path
-from fastapi import FastAPI, Query, HTTPException
+from fastapi import FastAPI, Query, HTTPException, Depends, Header
 from pydantic import BaseModel
 from typing import Dict, Any, Optional
 
@@ -20,20 +20,55 @@ class FeedbackRequest(BaseModel):
     confirmed_label: int
 
 
+class AuthRequest(BaseModel):
+    email: str
+    password: str
+
+
+def get_current_user(authorization: str = Header(None)):
+    """
+    Reads the 'Authorization: Bearer <token>' header, asks Supabase to verify it,
+    and returns the user. Raises 401 if missing or invalid.
+    """
+    if authorization is None or not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Missing or malformed Authorization header")
+
+    token = authorization.split(" ")[1]
+    try:
+        user_response = supabase.auth.get_user(token)
+    except Exception:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
+
+    if user_response is None or user_response.user is None:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
+
+    return user_response.user
+
+
 @app.get("/")
 def root():
     return {"status": "Quorum API is running"}
 
 
+@app.post("/auth/signup")
+def signup(payload: AuthRequest):
+    result = supabase.auth.sign_up({"email": payload.email, "password": payload.password})
+    return {"user_id": result.user.id if result.user else None}
+
+
+@app.post("/auth/login")
+def login(payload: AuthRequest):
+    result = supabase.auth.sign_in_with_password({"email": payload.email, "password": payload.password})
+    return {"access_token": result.session.access_token}
+
+
 @app.post("/score")
-def score_transaction(transaction: Dict[str, Any]):
+def score_transaction(transaction: Dict[str, Any], user=Depends(get_current_user)):
     result = predict(transaction)
 
-    # Write the raw transaction to the transactions table (audit log)
     txn_row = {k: v for k, v in transaction.items() if k != "is_fraud"}
     supabase.table("transactions").insert(txn_row).execute()
 
-    # Write the decision to the decisions table
     decision_row = {
         "transaction_id": transaction.get("transaction_id"),
         "score": result["score"],
@@ -47,7 +82,11 @@ def score_transaction(transaction: Dict[str, Any]):
 
 
 @app.get("/transactions")
-def list_transactions(band: Optional[str] = Query(None), anomaly_flag: Optional[bool] = Query(None)):
+def list_transactions(
+    band: Optional[str] = Query(None),
+    anomaly_flag: Optional[bool] = Query(None),
+    user=Depends(get_current_user),
+):
     query = supabase.table("decisions").select("*")
     if band is not None:
         query = query.eq("band", band)
@@ -73,7 +112,7 @@ def get_stats():
 
 
 @app.post("/feedback")
-def submit_feedback(feedback: FeedbackRequest):
+def submit_feedback(feedback: FeedbackRequest, user=Depends(get_current_user)):
     record_feedback(feedback.transaction_id, feedback.transaction, feedback.confirmed_label)
 
     supabase.table("retrain_feedback").insert({

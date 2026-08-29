@@ -1,21 +1,17 @@
 import sys, os, json
 from pathlib import Path
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, HTTPException
 from pydantic import BaseModel
 from typing import Dict, Any, Optional
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from models.pipeline import predict, record_feedback
+from api.supabase_client import supabase
 
 app = FastAPI(title="Quorum Risk Manager API")
 
 MODELS_DIR = Path(__file__).resolve().parent.parent / "models"
-
-# Temporary in-memory store for scored transactions.
-# This gets replaced by real Supabase storage in Hour 4-5 today — for now it just
-# lets /transactions show you what /score has produced during this session.
-scored_transactions = []
 
 
 class FeedbackRequest(BaseModel):
@@ -32,18 +28,33 @@ def root():
 @app.post("/score")
 def score_transaction(transaction: Dict[str, Any]):
     result = predict(transaction)
-    scored_transactions.append({**transaction, **result})
+
+    # Write the raw transaction to the transactions table (audit log)
+    txn_row = {k: v for k, v in transaction.items() if k != "is_fraud"}
+    supabase.table("transactions").insert(txn_row).execute()
+
+    # Write the decision to the decisions table
+    decision_row = {
+        "transaction_id": transaction.get("transaction_id"),
+        "score": result["score"],
+        "band": result["band"],
+        "anomaly_flag": result["anomaly_flag"],
+        "explanation": result["explanation"],
+    }
+    supabase.table("decisions").insert(decision_row).execute()
+
     return result
 
 
 @app.get("/transactions")
 def list_transactions(band: Optional[str] = Query(None), anomaly_flag: Optional[bool] = Query(None)):
-    results = scored_transactions
+    query = supabase.table("decisions").select("*")
     if band is not None:
-        results = [t for t in results if t.get("band") == band]
+        query = query.eq("band", band)
     if anomaly_flag is not None:
-        results = [t for t in results if t.get("anomaly_flag") == anomaly_flag]
-    return results
+        query = query.eq("anomaly_flag", anomaly_flag)
+    response = query.order("created_at", desc=True).execute()
+    return response.data
 
 
 @app.get("/stats")
@@ -64,4 +75,10 @@ def get_stats():
 @app.post("/feedback")
 def submit_feedback(feedback: FeedbackRequest):
     record_feedback(feedback.transaction_id, feedback.transaction, feedback.confirmed_label)
+
+    supabase.table("retrain_feedback").insert({
+        "transaction_id": feedback.transaction_id,
+        "confirmed_label": feedback.confirmed_label,
+    }).execute()
+
     return {"status": "feedback recorded"}

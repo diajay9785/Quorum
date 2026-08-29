@@ -82,19 +82,10 @@ def predict(transaction: dict) -> dict:
     else:
         shap_row = shap_values[0]               # already 2D
 
-    row_values = features_df.iloc[0]
-    ranked_indices = np.argsort(np.abs(shap_row))[::-1]
-
+    top_indices = np.argsort(np.abs(shap_row))[::-1][:3]
     top_features = []
-    for i in ranked_indices:
+    for i in top_indices:
         feature_name = FEATURE_COLS[i]
-
-        # Skip a cat_* feature entirely when it's 0 for this row --
-        # "unusual category (X)" only makes sense when the transaction
-        # actually IS category X.
-        if feature_name.startswith("cat_") and row_values[feature_name] == 0:
-            continue
-
         contribution = float(shap_row[i])
         direction = "higher" if contribution > 0 else "lower"
         template = get_template(feature_name)
@@ -105,9 +96,6 @@ def predict(transaction: dict) -> dict:
             "direction": direction,
             "phrase_en": template.format(direction=direction, feature=feature_name),
         })
-
-        if len(top_features) == 3:
-            break
     explanation_text = "Flagged mainly because " + "; ".join(
         item["phrase_en"] for item in top_features
     ) + "."

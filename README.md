@@ -2,7 +2,7 @@
 
 **Cost-aware transaction risk scoring with explainable, autonomous AI**
 
-Built for Track 2: Risk Manager — a 4-day hackathon build (27–30 Aug 2026).
+Built for Track 2: Risk Manager
 
 ---
 

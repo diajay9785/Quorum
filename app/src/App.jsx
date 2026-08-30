@@ -6,10 +6,12 @@ import SimulatorPanel from './SimulatorPanel'
 import StatsCharts from './StatsCharts'
 import FlaggedQueue from './FlaggedQueue'
 import AutonomyMeter from './AutonomyMeter'
+import AuditTrail from './AuditTrail'
 
 function App() {
   const { t, i18n } = useTranslation()
   const [session, setSession] = useState(null)
+  const [view, setView] = useState('dashboard')
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -27,6 +29,10 @@ function App() {
     return <Auth onLogin={setSession} />
   }
 
+  if (view === 'audit') {
+    return <AuditTrail onBack={() => setView('dashboard')} />
+  }
+
   return (
     <div className="min-h-screen flex flex-col items-center gap-6 bg-slate-900 py-10 px-4">
       <div className="flex items-center gap-4">
@@ -39,6 +45,10 @@ function App() {
         <button onClick={() => i18n.changeLanguage('hi')} className="px-3 py-1 bg-slate-700 text-white rounded">HI</button>
         <button onClick={() => i18n.changeLanguage('ta')} className="px-3 py-1 bg-slate-700 text-white rounded">TA</button>
       </div>
+
+      <button onClick={() => setView('audit')} className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded">
+        View Audit Trail
+      </button>
 
       <SimulatorPanel />
       <AutonomyMeter />

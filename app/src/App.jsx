@@ -3,6 +3,7 @@ import { supabase } from './supabaseClient'
 import { useTranslation } from 'react-i18next'
 import Auth from './Auth'
 import SimulatorPanel from './SimulatorPanel'
+import StatsCharts from './StatsCharts'
 
 function App() {
   const { t, i18n } = useTranslation()
@@ -38,6 +39,7 @@ function App() {
       </div>
 
       <SimulatorPanel />
+      <StatsCharts />
 
       <button onClick={() => supabase.auth.signOut()} className="px-4 py-2 bg-red-500 text-white rounded">
         {t('logout')}

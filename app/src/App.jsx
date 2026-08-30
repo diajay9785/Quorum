@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next'
 import Auth from './Auth'
 import SimulatorPanel from './SimulatorPanel'
 import StatsCharts from './StatsCharts'
+import FlaggedQueue from './FlaggedQueue'
+import AutonomyMeter from './AutonomyMeter'
 
 function App() {
   const { t, i18n } = useTranslation()
@@ -39,7 +41,9 @@ function App() {
       </div>
 
       <SimulatorPanel />
+      <AutonomyMeter />
       <StatsCharts />
+      <FlaggedQueue />
 
       <button onClick={() => supabase.auth.signOut()} className="px-4 py-2 bg-red-500 text-white rounded">
         {t('logout')}

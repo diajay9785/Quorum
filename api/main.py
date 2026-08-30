@@ -14,7 +14,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # add your Vercel URL here once deployed in Hour 7
+    allow_origins=["http://localhost:5173", "https://quorum-ivory.vercel.app"],  # add your Vercel URL here once deployed in Hour 7
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

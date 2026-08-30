@@ -12,65 +12,45 @@ function AutonomyMeter() {
     async function fetchCounts() {
       try {
         const { data: { session } } = await supabase.auth.getSession()
-        const token = session?.access_token
-        const headers = { Authorization: `Bearer ${token}` }
-
+        const headers = { Authorization: `Bearer ${session?.access_token}` }
         const [approve, escalate, block] = await Promise.all([
           axios.get(`${API_BASE}/transactions`, { params: { band: 'approve' }, headers }),
           axios.get(`${API_BASE}/transactions`, { params: { band: 'escalate' }, headers }),
           axios.get(`${API_BASE}/transactions`, { params: { band: 'block' }, headers }),
         ])
-
-        setCounts({
-          approve: approve.data.length,
-          escalate: escalate.data.length,
-          block: block.data.length,
-        })
+        setCounts({ approve: approve.data.length, escalate: escalate.data.length, block: block.data.length })
       } catch (err) {
         setError(err.response?.data?.detail || err.message)
       }
     }
-
     fetchCounts()
   }, [])
 
-  if (error) {
-    return <div className="bg-red-900 text-red-200 p-3 rounded text-sm w-full max-w-2xl">Error: {error}</div>
-  }
-
-  if (!counts) {
-    return <p className="text-slate-400">Loading autonomy meter...</p>
-  }
+  if (error) return <div style={{ background: '#4c1d24', color: '#fecaca', padding: '12px', borderRadius: '10px', fontSize: '13px' }}>Error: {error}</div>
+  if (!counts) return <p style={{ color: '#64748b' }}>Loading...</p>
 
   const total = counts.approve + counts.escalate + counts.block
   const autonomousPct = total > 0 ? (((counts.approve + counts.block) / total) * 100).toFixed(1) : 0
   const escalatedPct = total > 0 ? ((counts.escalate / total) * 100).toFixed(1) : 0
 
   return (
-    <div className="bg-slate-800 rounded-lg p-6 w-full max-w-2xl flex flex-col gap-4">
-      <h2 className="text-xl font-bold text-emerald-400">Autonomy Meter</h2>
-
-      <div className="flex items-center gap-6">
-        <div className="text-center">
-          <p className="text-4xl font-bold text-white">{autonomousPct}%</p>
-          <p className="text-slate-400 text-sm">Handled automatically</p>
-        </div>
-        <div className="text-center">
-          <p className="text-4xl font-bold text-yellow-400">{escalatedPct}%</p>
-          <p className="text-slate-400 text-sm">Escalated to human</p>
-        </div>
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
+      <div style={{ background: '#1a1838', borderRadius: '12px', padding: '16px', border: '0.5px solid #383465' }}>
+        <p style={{ fontSize: '12px', color: '#94a3b8', margin: '0 0 6px' }}>Handled automatically</p>
+        <p style={{ fontSize: '28px', fontWeight: 500, color: '#a5b4fc', margin: 0 }}>{autonomousPct}%</p>
       </div>
-
-      <div className="flex h-4 rounded overflow-hidden">
-        <div className="bg-emerald-500" style={{ width: `${(counts.approve / total) * 100}%` }} />
-        <div className="bg-yellow-500" style={{ width: `${(counts.escalate / total) * 100}%` }} />
-        <div className="bg-red-500" style={{ width: `${(counts.block / total) * 100}%` }} />
+      <div style={{ background: '#1a1838', borderRadius: '12px', padding: '16px', border: '0.5px solid #383465' }}>
+        <p style={{ fontSize: '12px', color: '#94a3b8', margin: '0 0 6px' }}>Escalated to human</p>
+        <p style={{ fontSize: '28px', fontWeight: 500, color: '#fbbf24', margin: 0 }}>{escalatedPct}%</p>
       </div>
-
-      <div className="flex justify-between text-xs text-slate-400">
-        <span>Approve: {counts.approve}</span>
-        <span>Escalate: {counts.escalate}</span>
-        <span>Block: {counts.block}</span>
+      <div style={{ background: '#1a1838', borderRadius: '12px', padding: '16px', border: '0.5px solid #383465' }}>
+        <p style={{ fontSize: '12px', color: '#94a3b8', margin: '0 0 6px' }}>Total scored</p>
+        <p style={{ fontSize: '28px', fontWeight: 500, color: '#f1f5f9', margin: 0 }}>{total}</p>
+      </div>
+      <div style={{ gridColumn: 'span 3', display: 'flex', height: '6px', borderRadius: '99px', overflow: 'hidden' }}>
+        <div style={{ background: '#818cf8', width: `${(counts.approve / total) * 100}%` }} />
+        <div style={{ background: '#fbbf24', width: `${(counts.escalate / total) * 100}%` }} />
+        <div style={{ background: '#fb7185', width: `${(counts.block / total) * 100}%` }} />
       </div>
     </div>
   )

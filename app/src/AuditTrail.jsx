@@ -3,12 +3,7 @@ import { supabase } from './supabaseClient'
 import axios from 'axios'
 
 const API_BASE = 'https://quorum-j7zr.onrender.com'
-
-const bandColors = {
-  approve: 'text-emerald-400',
-  escalate: 'text-yellow-400',
-  block: 'text-red-400',
-}
+const bandColors = { approve: '#a5b4fc', escalate: '#fbbf24', block: '#fb7185' }
 
 function AuditTrail({ onBack }) {
   const [rows, setRows] = useState([])
@@ -20,23 +15,14 @@ function AuditTrail({ onBack }) {
     async function fetchAll() {
       try {
         const { data: { session } } = await supabase.auth.getSession()
-        const token = session?.access_token
-
-        const response = await axios.get(`${API_BASE}/transactions`, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-
-        const sorted = [...response.data].sort(
-          (a, b) => new Date(b.created_at) - new Date(a.created_at)
-        )
-        setRows(sorted)
+        const response = await axios.get(`${API_BASE}/transactions`, { headers: { Authorization: `Bearer ${session?.access_token}` } })
+        setRows([...response.data].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)))
       } catch (err) {
         setError(err.response?.data?.detail || err.message)
       } finally {
         setLoading(false)
       }
     }
-
     fetchAll()
   }, [])
 
@@ -46,52 +32,41 @@ function AuditTrail({ onBack }) {
   )
 
   return (
-    <div className="min-h-screen flex flex-col items-center gap-6 bg-slate-900 py-10 px-4">
-      <div className="flex items-center gap-4 w-full max-w-3xl justify-between">
-        <h1 className="text-3xl font-bold text-emerald-400">Audit Trail</h1>
-        <button onClick={onBack} className="px-4 py-2 bg-slate-700 text-white rounded">
-          Back to Dashboard
-        </button>
-      </div>
+    <div style={{ minHeight: '100vh', background: '#14122b', padding: '32px 20px' }}>
+      <div style={{ maxWidth: '780px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h1 style={{ fontSize: '22px', fontWeight: 500, color: '#f1f5f9', margin: 0 }}>Audit Trail</h1>
+          <button onClick={onBack} style={{ padding: '8px 16px', borderRadius: '8px', background: '#211f45', color: '#e2e8f0', border: '0.5px solid #383465', cursor: 'pointer', fontSize: '13px' }}>
+            Back to Dashboard
+          </button>
+        </div>
 
-      <div className="w-full max-w-3xl">
         <input
-          type="text"
-          placeholder="Search by transaction ID or band..."
-          value={search}
+          type="text" placeholder="Search by transaction ID or band..." value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full px-3 py-2 rounded bg-slate-800 text-white outline-none"
+          style={{ padding: '10px 12px', borderRadius: '8px', background: '#1a1838', border: '0.5px solid #383465', color: '#f1f5f9', outline: 'none', fontSize: '13px' }}
         />
-      </div>
 
-      {loading && <p className="text-slate-400">Loading audit trail...</p>}
-      {error && <p className="text-red-400 text-sm">Error: {error}</p>}
+        {loading && <p style={{ color: '#64748b' }}>Loading audit trail...</p>}
+        {error && <p style={{ color: '#fb7185', fontSize: '13px' }}>Error: {error}</p>}
+        {!loading && !error && filteredRows.length === 0 && <p style={{ color: '#64748b', fontSize: '13px' }}>No matching records.</p>}
 
-      <div className="w-full max-w-3xl flex flex-col gap-3">
-        {!loading && !error && filteredRows.length === 0 && (
-          <p className="text-slate-400 text-sm">No matching records.</p>
-        )}
-
-        {filteredRows.map((row) => (
-          <div key={row.transaction_id + row.created_at} className="bg-slate-800 rounded-lg p-4 flex flex-col gap-1">
-            <div className="flex justify-between items-center">
-              <span className="text-white font-mono text-sm">#{row.transaction_id}</span>
-              <span className={`font-bold uppercase text-xs ${bandColors[row.band] || 'text-slate-400'}`}>
-                {row.band}
-              </span>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          {filteredRows.map((row) => (
+            <div key={row.transaction_id + row.created_at} style={{ background: '#1a1838', borderRadius: '10px', padding: '14px', border: '0.5px solid #383465' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ color: '#94a3b8', fontFamily: 'monospace', fontSize: '12px' }}>#{row.transaction_id}</span>
+                <span style={{ color: bandColors[row.band] || '#94a3b8', fontWeight: 600, fontSize: '11px', textTransform: 'uppercase' }}>{row.band}</span>
+              </div>
+              <p style={{ color: '#64748b', fontSize: '11px', margin: '4px 0' }}>
+                score: {row.score?.toFixed(4)}
+                {row.anomaly_flag && <span style={{ color: '#c084fc', fontWeight: 600, marginLeft: '8px' }}>ANOMALY</span>}
+              </p>
+              {row.created_at && <p style={{ color: '#475569', fontSize: '11px', margin: '2px 0' }}>{new Date(row.created_at).toLocaleString()}</p>}
+              {row.explanation?.text_en && <p style={{ color: '#cbd5e1', fontSize: '12px', fontStyle: 'italic', margin: '4px 0 0' }}>{row.explanation.text_en}</p>}
             </div>
-            <p className="text-slate-400 text-xs">
-              score: {row.score?.toFixed(4)}
-              {row.anomaly_flag && <span className="ml-2 text-purple-400 font-bold">ANOMALY</span>}
-            </p>
-            {row.created_at && (
-              <p className="text-slate-500 text-xs">{new Date(row.created_at).toLocaleString()}</p>
-            )}
-            {row.explanation?.text_en && (
-              <p className="text-slate-300 text-xs italic">{row.explanation.text_en}</p>
-            )}
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   )

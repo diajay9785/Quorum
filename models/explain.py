@@ -65,10 +65,19 @@ DEFAULT_TEMPLATE = "{feature} was a contributing factor"
 
 def explain_row(row_idx, top_n=3):
     row_shap = shap_matrix[row_idx]
-    top_indices = np.argsort(np.abs(row_shap))[::-1][:top_n]
+    row_values = X_val_sample.iloc[row_idx]
+    top_indices = np.argsort(np.abs(row_shap))[::-1]
+
     explanation_items = []
     for i in top_indices:
         feature_name = feature_cols[i]
+
+        # Skip a cat_* feature entirely when it's 0 for this row --
+        # "unusual category (X)" only makes sense when the transaction
+        # actually IS category X.
+        if feature_name.startswith("cat_") and row_values[feature_name] == 0:
+            continue
+
         contribution = float(row_shap[i])
         direction = "higher" if contribution > 0 else "lower"
         template = get_template(feature_name)
@@ -80,6 +89,10 @@ def explain_row(row_idx, top_n=3):
             "direction": direction,
             "phrase_en": phrase,
         })
+
+        if len(explanation_items) == top_n:
+            break
+
     return {
         "top_features": explanation_items,
         "explanation_text_en": "Flagged mainly because " + "; ".join(

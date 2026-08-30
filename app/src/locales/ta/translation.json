@@ -7,5 +7,15 @@
   "dashboard": "டாஷ்போர்டு",
   "simulator": "நேரடி சிமுலேட்டர்",
   "audit_trail": "தணிக்கை பாதை",
-  "logout": "வெளியேறு"
+  "logout": "வெளியேறு",
+  "preset_label": "முன்னமைவு",
+  "score_label": "மதிப்பெண்",
+  "anomaly_badge": "முரண்பாடு",
+  "band_approve": "அங்கீகரிக்கப்பட்டது",
+  "band_escalate": "மேலிடம் அனுப்பப்பட்டது",
+  "band_block": "தடுக்கப்பட்டது",
+  "preset_normal": "சாதாரண",
+  "preset_obvious_fraud": "வெளிப்படையான மோசடி",
+  "preset_ambiguous": "தெளிவற்ற",
+  "preset_unseen_pattern": "காணப்படாத முறை"
 }

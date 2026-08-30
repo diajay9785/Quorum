@@ -1,6 +1,6 @@
 export const presets = {
   normal: {
-    label: 'Normal',
+    labelKey: 'preset_normal',
     transaction: {
       transaction_id: 1,
       amount: 107.55,
@@ -13,7 +13,7 @@ export const presets = {
     },
   },
   obvious_fraud: {
-    label: 'Obvious Fraud',
+    labelKey: 'preset_obvious_fraud',
     transaction: {
       transaction_id: 114,
       amount: 260.02,
@@ -26,7 +26,7 @@ export const presets = {
     },
   },
   ambiguous: {
-    label: 'Ambiguous',
+    labelKey: 'preset_ambiguous',
     transaction: {
       transaction_id: 20,
       amount: 54.74,
@@ -39,7 +39,7 @@ export const presets = {
     },
   },
   unseen_pattern: {
-    label: 'Unseen Pattern',
+    labelKey: 'preset_unseen_pattern',
     transaction: {
       transaction_id: 900000,
       amount: 13.43,

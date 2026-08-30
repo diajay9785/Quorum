@@ -7,5 +7,15 @@
   "dashboard": "डैशबोर्ड",
   "simulator": "लाइव सिम्युलेटर",
   "audit_trail": "ऑडिट ट्रेल",
-  "logout": "लॉग आउट"
+  "logout": "लॉग आउट",
+  "preset_label": "प्रीसेट",
+  "score_label": "स्कोर",
+  "anomaly_badge": "विसंगति",
+  "band_approve": "स्वीकृत",
+  "band_escalate": "आगे बढ़ाया गया",
+  "band_block": "अवरुद्ध",
+  "preset_normal": "सामान्य",
+  "preset_obvious_fraud": "स्पष्ट धोखाधड़ी",
+  "preset_ambiguous": "अस्पष्ट",
+  "preset_unseen_pattern": "अनदेखा पैटर्न"
 }

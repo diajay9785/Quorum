@@ -7,5 +7,15 @@
   "dashboard": "Dashboard",
   "simulator": "Live Simulator",
   "audit_trail": "Audit Trail",
-  "logout": "Log Out"
+  "logout": "Log Out",
+  "preset_label": "Preset",
+  "score_label": "score",
+  "anomaly_badge": "Anomaly",
+  "band_approve": "Approve",
+  "band_escalate": "Escalate",
+  "band_block": "Block",
+  "preset_normal": "Normal",
+  "preset_obvious_fraud": "Obvious Fraud",
+  "preset_ambiguous": "Ambiguous",
+  "preset_unseen_pattern": "Unseen Pattern"
 }

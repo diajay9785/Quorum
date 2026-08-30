@@ -9,6 +9,12 @@ const bandColors = {
   block: 'bg-red-500',
 }
 
+const bandKeys = {
+  approve: 'band_approve',
+  escalate: 'band_escalate',
+  block: 'band_block',
+}
+
 function SimulatorPanel() {
   const { t } = useTranslation()
   const [loading, setLoading] = useState(null)
@@ -23,7 +29,7 @@ function SimulatorPanel() {
     try {
       const preset = presets[key]
       const response = await scoreTransaction(preset.transaction)
-      setResult({ presetLabel: preset.label, ...response })
+      setResult({ presetLabelKey: preset.labelKey, ...response })
     } catch (err) {
       setError(err.response?.data?.detail || err.message)
     } finally {
@@ -43,7 +49,7 @@ function SimulatorPanel() {
             disabled={loading !== null}
             className="px-4 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded font-medium disabled:opacity-50"
           >
-            {loading === key ? '...' : preset.label}
+            {loading === key ? '...' : t(preset.labelKey)}
           </button>
         ))}
       </div>
@@ -56,17 +62,17 @@ function SimulatorPanel() {
 
       {result && (
         <div className="bg-slate-900 rounded-lg p-4 flex flex-col gap-2">
-          <p className="text-slate-400 text-sm">Preset: {result.presetLabel}</p>
+          <p className="text-slate-400 text-sm">{t('preset_label')}: {t(result.presetLabelKey)}</p>
           <div className="flex items-center gap-3">
             <span className={`px-3 py-1 rounded text-white font-bold uppercase text-sm ${bandColors[result.band] || 'bg-slate-600'}`}>
-              {result.band}
+              {t(bandKeys[result.band] || result.band)}
             </span>
             <span className="text-white font-mono">
-              score: {result.score?.toFixed(4)}
+              {t('score_label')}: {result.score?.toFixed(4)}
             </span>
             {result.anomaly_flag && (
               <span className="px-2 py-1 bg-purple-600 text-white text-xs rounded font-bold">
-                ANOMALY
+                {t('anomaly_badge')}
               </span>
             )}
           </div>
